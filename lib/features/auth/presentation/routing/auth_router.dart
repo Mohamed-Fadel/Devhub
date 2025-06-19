@@ -15,7 +15,7 @@ class AuthRouter implements BaseRouter {
       path: RoutePaths.signIn,
       initial: true, // Default auth route
     ),
-    // AutoRoute(page: SignUpRoute.page, path: RoutePaths.signUp),
+    AutoRoute(page: SignUpRoute.page, path: RoutePaths.signUp),
     // AutoRoute(page: ForgotPasswordRoute.page, path: RoutePaths.forgotPassword),
   ];
 }

@@ -13,35 +13,41 @@ import '../../../../shared/widgets/social_sign_in_button.dart';
 import '../bloc/auth_bloc.dart';
 
 @RoutePage()
-class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<AuthBloc>(),
-      child: const SignInView(),
+      child: const SignUpView(),
     );
   }
 }
 
-class SignInView extends StatefulWidget {
-  const SignInView({super.key});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key});
 
   @override
-  State<SignInView> createState() => _SignInViewState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _SignInViewState extends State<SignInView> {
+class _SignUpViewState extends State<SignUpView> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+  bool _acceptTerms = false;
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -50,6 +56,7 @@ class _SignInViewState extends State<SignInView> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      appBar: AppBar(title: const Text('Sign Up'), centerTitle: true),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           switch (state) {
@@ -72,38 +79,40 @@ class _SignInViewState extends State<SignInView> {
           return LoadingOverlay(
             isLoading: state is Loading,
             child: SafeArea(
-              child: Padding(
+              child: SingleChildScrollView(
                 padding: const EdgeInsets.all(AppConstants.spaceLG),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Spacer(),
-
-                      // Logo and Title
-                      Icon(
-                        Icons.code,
-                        size: 80,
-                        color: theme.colorScheme.primary,
-                      ),
-                      const SizedBox(height: AppConstants.spaceMD),
-
+                      // Title
                       Text(
-                        'Welcome to DevHub',
+                        'Create Your Account',
                         style: theme.textTheme.headlineMedium,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: AppConstants.spaceSM),
 
                       Text(
-                        'Sign in to your developer account',
+                        'Join the developer community',
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurface.withOpacity(0.7),
                         ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: AppConstants.spaceXL),
+
+                      // Name Field
+                      CustomTextField(
+                        controller: _nameController,
+                        labelText: 'Full Name',
+                        hintText: 'Enter your full name',
+                        validator:
+                            (value) => ValidationRules.required(value, 'Name'),
+                        prefixIcon: Icons.person_outlined,
+                      ),
+                      const SizedBox(height: AppConstants.spaceMD),
 
                       // Email Field
                       CustomTextField(
@@ -120,11 +129,9 @@ class _SignInViewState extends State<SignInView> {
                       CustomTextField(
                         controller: _passwordController,
                         labelText: 'Password',
-                        hintText: 'Enter your password',
+                        hintText: 'Create a strong password',
                         obscureText: _obscurePassword,
-                        validator:
-                            (value) =>
-                                ValidationRules.required(value, 'Password'),
+                        validator: ValidationRules.password,
                         prefixIcon: Icons.lock_outlined,
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -139,24 +146,84 @@ class _SignInViewState extends State<SignInView> {
                           },
                         ),
                       ),
-                      const SizedBox(height: AppConstants.spaceSM),
+                      const SizedBox(height: AppConstants.spaceMD),
 
-                      // Forgot Password
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
+                      // Confirm Password Field
+                      CustomTextField(
+                        controller: _confirmPasswordController,
+                        labelText: 'Confirm Password',
+                        hintText: 'Confirm your password',
+                        obscureText: _obscureConfirmPassword,
+                        validator: (value) {
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
+                        prefixIcon: Icons.lock_outlined,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                          ),
                           onPressed: () {
-                            context.router.pushPath(RoutePaths.forgotPassword);
+                            setState(() {
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
+                            });
                           },
-                          child: const Text('Forgot Password?'),
                         ),
+                      ),
+                      const SizedBox(height: AppConstants.spaceMD),
+
+                      // Terms and Conditions
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _acceptTerms,
+                            onChanged: (value) {
+                              setState(() {
+                                _acceptTerms = value ?? false;
+                              });
+                            },
+                          ),
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                style: theme.textTheme.bodyMedium,
+                                children: [
+                                  const TextSpan(text: 'I agree to the '),
+                                  TextSpan(
+                                    text: 'Terms of Service',
+                                    style: TextStyle(
+                                      color: theme.colorScheme.primary,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                  const TextSpan(text: ' and '),
+                                  TextSpan(
+                                    text: 'Privacy Policy',
+                                    style: TextStyle(
+                                      color: theme.colorScheme.primary,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: AppConstants.spaceLG),
 
-                      // Sign In Button
+                      // Sign Up Button
                       CustomButton(
-                        text: 'Sign In',
-                        onPressed: () => _onSignInPressed(context),
+                        text: 'Create Account',
+                        onPressed:
+                            _acceptTerms
+                                ? () => _onSignUpPressed(context)
+                                : null,
                         isLoading: state is Loading,
                       ),
                       const SizedBox(height: AppConstants.spaceLG),
@@ -183,10 +250,10 @@ class _SignInViewState extends State<SignInView> {
                       ),
                       const SizedBox(height: AppConstants.spaceLG),
 
-                      // Social Sign In Buttons
+                      // Social Sign Up Buttons
                       SocialSignInButton(
                         icon: 'assets/icons/social/google.svg',
-                        text: 'Continue with Google',
+                        text: 'Sign up with Google',
                         onPressed: () {
                           context.read<AuthBloc>().add(
                             const AuthEvent.googleSignInRequested(),
@@ -197,7 +264,7 @@ class _SignInViewState extends State<SignInView> {
 
                       SocialSignInButton(
                         icon: 'assets/icons/social/github.svg',
-                        text: 'Continue with GitHub',
+                        text: 'Sign up with GitHub',
                         onPressed: () {
                           context.read<AuthBloc>().add(
                             const AuthEvent.githubSignInRequested(),
@@ -206,24 +273,22 @@ class _SignInViewState extends State<SignInView> {
                       ),
                       const SizedBox(height: AppConstants.spaceXL),
 
-                      // Sign Up Link
+                      // Sign In Link
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Don't have an account? ",
+                            'Already have an account? ',
                             style: theme.textTheme.bodyMedium,
                           ),
                           TextButton(
                             onPressed: () {
-                              context.router.pushPath(RoutePaths.signUp);
+                              context.router.pop();
                             },
-                            child: const Text('Sign Up'),
+                            child: const Text('Sign In'),
                           ),
                         ],
                       ),
-
-                      const Spacer(),
                     ],
                   ),
                 ),
@@ -235,12 +300,13 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
-  void _onSignInPressed(BuildContext context) {
+  void _onSignUpPressed(BuildContext context) {
     if (_formKey.currentState?.validate() ?? false) {
       context.read<AuthBloc>().add(
-        AuthEvent.signInRequested(
+        AuthEvent.signUpRequested(
           email: _emailController.text.trim(),
           password: _passwordController.text,
+          name: _nameController.text.trim(),
         ),
       );
     }
