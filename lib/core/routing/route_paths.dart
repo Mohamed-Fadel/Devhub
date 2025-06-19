@@ -1,4 +1,7 @@
 // Central place for all route paths to avoid conflicts
+
+typedef RoutePathe = String;
+
 class RoutePaths {
   // Root paths
   static const String splash = '/';

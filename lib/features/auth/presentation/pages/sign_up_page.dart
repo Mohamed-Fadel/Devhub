@@ -1,4 +1,5 @@
 import 'package:devhub/core/routing/route_paths.dart';
+import 'package:devhub/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
@@ -10,7 +11,6 @@ import '../../../../shared/widgets/loading_overlay.dart';
 import '../../../../shared/widgets/custom_text_field.dart';
 import '../../../../shared/widgets/custom_button.dart';
 import '../../../../shared/widgets/social_sign_in_button.dart';
-import '../bloc/auth_bloc.dart';
 
 @RoutePage()
 class SignUpPage extends StatelessWidget {

@@ -12,10 +12,13 @@ class AuthRouter implements BaseRouter {
   List<AutoRoute> get routes => [
     AutoRoute(
       page: SignInRoute.page,
-      path: RoutePaths.signIn,
-      initial: true, // Default auth route
+      path: RoutePaths.signIn
     ),
     AutoRoute(page: SignUpRoute.page, path: RoutePaths.signUp),
     // AutoRoute(page: ForgotPasswordRoute.page, path: RoutePaths.forgotPassword),
   ];
+}
+
+void main(){
+  final RoutePathe page = "sdsd";
 }

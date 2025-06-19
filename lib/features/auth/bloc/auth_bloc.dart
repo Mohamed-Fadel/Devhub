@@ -1,12 +1,11 @@
+import 'package:devhub/core/error/failures.dart';
+import 'package:devhub/features/auth/domain/entities/user.dart';
+import 'package:devhub/features/auth/domain/repositories/auth_repository.dart';
+import 'package:devhub/features/auth/domain/usecases/sign_in_usecase.dart';
+import 'package:devhub/features/auth/domain/usecases/sign_up_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-
-import '../../../../core/error/failures.dart';
-import '../../domain/entities/user.dart';
-import '../../domain/usecases/sign_in_usecase.dart';
-import '../../domain/usecases/sign_up_usecase.dart';
-import '../../domain/repositories/auth_repository.dart';
 
 part 'auth_bloc.freezed.dart';
 
