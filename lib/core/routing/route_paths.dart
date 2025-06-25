@@ -8,6 +8,9 @@ class RoutePaths {
   static const String auth = '/auth';
   static const String app = '/app';
 
+  // Onboarding paths
+  static const String onboarding = '/onboarding';
+
   // Auth paths
   static const String signIn = '/sign-in';
   static const String signUp = '/sign-up';
