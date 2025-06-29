@@ -16,7 +16,6 @@ class OnboardingPreferenceReaderImpl implements OnboardingPreferenceReader {
     return value == null || value == 'true';
   }
 
-  @override
   Future<void> setFirstTime(bool value) async {
     await _secureStorage.write(
       key: _firstTimeKey,

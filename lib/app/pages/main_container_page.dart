@@ -1,5 +1,8 @@
 import 'package:devhub/core/constants/app_constants.dart';
+import 'package:devhub/core/services/storage_service.dart';
 import 'package:devhub/features/auth/bloc/auth_bloc.dart';
+import 'package:devhub/features/auth/presentation/pages/sign_in_page.dart';
+import 'package:devhub/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
@@ -17,7 +20,13 @@ class _MainContainerPageState extends State<MainContainerPage> {
   // Current screen state
   Widget? _currentScreen;
   bool _isInitializing = true;
-  bool _hasCheckedFirstTime = false;
+  late PreferencesReaderService _preferencesReaderService;
+
+  @override
+  void initState() {
+    super.initState();
+    _preferencesReaderService = getIt<PreferencesReaderService>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +112,7 @@ class _MainContainerPageState extends State<MainContainerPage> {
     BuildContext context,
     AuthState state,
   ) async {
-    switch(state){
+    switch (state) {
       case Initial():
       case Loading():
         // Show loading state
@@ -135,40 +144,24 @@ class _MainContainerPageState extends State<MainContainerPage> {
   }
 
   Future<void> _handleUnauthenticatedUser() async {
-    if (!_hasCheckedFirstTime) {
-      _hasCheckedFirstTime = true;
-
-      // Check if it's first time user
-      // final isFirstTime = await _storageService.isFirstTime();
-
-      // if (isFirstTime) {
-      // First time user - show onboarding
-      // await _storageService.setFirstTime(false);
-      // await _showOnboarding();
-      // } else {
+    if (await _preferencesReaderService.isFirstTime()) {
+      await _showOnboarding();
+    } else {
       // Returning user - show sign in
-      // await _showSignIn();
-      // }
-      // } else {
-      // Already checked first time, just show sign in
-      // await _showSignIn();
+      await _showSignIn();
     }
   }
 
   Future<void> _showOnboarding() async {
     setState(() {
-      // _currentScreen = OnboardingPage(
-      //   onCompleted: () {
-      //     When onboarding is completed, show sign in
-      // _showSignIn();
-      // },
-      // );
+      _currentScreen = OnboardingPage();
       _isInitializing = false;
     });
   }
 
   Future<void> _showSignIn() async {
     setState(() {
+      _currentScreen = SignInPage();
       // _currentScreen = SignInPage(
       //   onSignInSuccess: () {
       // When sign in is successful, auth bloc will emit authenticated state
