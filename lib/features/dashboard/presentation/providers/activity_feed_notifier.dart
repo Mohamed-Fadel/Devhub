@@ -19,7 +19,7 @@ sealed class ActivityFeedState with _$ActivityFeedState {
 
 class ActivityFeedNotifier extends StateNotifier<ActivityFeedState> {
   final GetActivityFeed _getActivityFeed;
-  static const int _pageSize = 20;
+  static const int _pageSize = 5;
 
   ActivityFeedNotifier({
     required GetActivityFeed getActivityFeed,

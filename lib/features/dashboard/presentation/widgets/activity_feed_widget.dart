@@ -117,10 +117,9 @@ class _ActivityItem extends ConsumerWidget {
                 color: _getActivityColor(activity.type).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                _getActivityIcon(activity.type),
-                color: _getActivityColor(activity.type),
-                size: 20,
+              child: Text(
+                _getActivityEmoji(activity.type),
+                style: const TextStyle(fontSize: 20),
               ),
             ),
             const SizedBox(width: AppConstants.spaceMD),
@@ -188,6 +187,23 @@ class _ActivityItem extends ConsumerWidget {
         return Colors.amber;
       case ActivityType.collaboration:
         return Colors.teal;
+    }
+  }
+
+  String _getActivityEmoji(ActivityType type) {
+    switch (type) {
+      case ActivityType.projectCreated:
+        return '📁';
+      case ActivityType.projectUpdated:
+        return '🔄';
+      case ActivityType.newFollower:
+        return '👤';
+      case ActivityType.githubActivity:
+        return '💻';
+      case ActivityType.achievement:
+        return '🏆';
+      case ActivityType.collaboration:
+        return '🤝';
     }
   }
 

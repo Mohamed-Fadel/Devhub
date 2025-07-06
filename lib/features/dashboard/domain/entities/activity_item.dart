@@ -18,7 +18,6 @@ sealed class ActivityItem with _$ActivityItem {
     required ActivityType type,
     required String title,
     required String description,
-    String? imageUrl,
     required DateTime timestamp,
     Map<String, dynamic>? metadata,
     required bool isRead,
