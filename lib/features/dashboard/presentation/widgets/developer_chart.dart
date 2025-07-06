@@ -1,36 +1,90 @@
+// lib/features/dashboard/presentation/widgets/developer_chart.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:devhub/core/constants/app_constants.dart';
-import 'package:devhub/features/dashboard/domain/entities/developer_metric.dart';
+import '../../../../core/constants/app_constants.dart';
+import '../../domain/entities/developer_metric.dart';
 import '../providers/dashboard_providers.dart';
 
-class DeveloperChart extends ConsumerWidget {
+class DeveloperChart extends ConsumerStatefulWidget {
   final List<DeveloperMetric> metrics;
 
-  const DeveloperChart({
-    super.key,
-    required this.metrics,
-  });
+  const DeveloperChart({super.key, required this.metrics});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DeveloperChart> createState() => _DeveloperChartState();
+}
+
+class _DeveloperChartState extends ConsumerState<DeveloperChart> {
+  late ScrollController _scrollController;
+  final Map<MetricType, GlobalKey> _chipKeys = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    // Initialize keys for each metric
+    for (final metric in widget.metrics) {
+      _chipKeys[metric.type] = GlobalKey();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToSelectedChip(MetricType selectedType) {
+    final key = _chipKeys[selectedType];
+    if (key?.currentContext != null) {
+      // Get the RenderBox of the selected chip
+      final RenderBox renderBox =
+          key!.currentContext!.findRenderObject() as RenderBox;
+      final position = renderBox.localToGlobal(
+        Offset.zero,
+        ancestor: context.findRenderObject(),
+      );
+
+      // Get the scroll position
+      final scrollOffset = _scrollController.offset;
+      final viewportWidth = _scrollController.position.viewportDimension;
+      final chipWidth = renderBox.size.width;
+      final chipPosition = position.dx + scrollOffset;
+
+      // Calculate the desired scroll position to center the chip
+      final desiredOffset =
+          chipPosition - (viewportWidth / 2) + (chipWidth / 2);
+
+      // Animate to the new position
+      _scrollController.animateTo(
+        desiredOffset.clamp(
+          _scrollController.position.minScrollExtent,
+          _scrollController.position.maxScrollExtent,
+        ),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final selectedMetric = ref.watch(selectedMetricProvider);
-    final selectedMetricData = selectedMetric != null
-        ? metrics.firstWhere(
-          (m) => m.type == selectedMetric,
-      orElse: () => metrics.first,
-    )
-        : metrics.first;
+    final selectedMetricData =
+        selectedMetric != null
+            ? widget.metrics.firstWhere(
+              (m) => m.type == selectedMetric,
+              orElse: () => widget.metrics.first,
+            )
+            : widget.metrics.first;
 
     return Container(
-      padding: const EdgeInsets.all(AppConstants.spaceMD),
+      padding: const EdgeInsets.symmetric(vertical: AppConstants.spaceMD),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(AppConstants.radiusMD),
-        border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
         boxShadow: [
           BoxShadow(
             color: theme.shadowColor.withOpacity(0.05),
@@ -42,62 +96,87 @@ class DeveloperChart extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Metric Selector
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: metrics.map((metric) {
-                final isSelected = metric.type == (selectedMetric ?? metrics.first.type);
-                return Padding(
-                  padding: const EdgeInsets.only(right: AppConstants.spaceSM),
-                  child: ChoiceChip(
-                    label: Text(metric.label),
-                    selected: isSelected,
-                    onSelected: (_) {
-                      ref.read(selectedMetricProvider.notifier).state = metric.type;
-                    },
-                  ),
-                );
-              }).toList(),
+          // Metric Selector with ScrollController
+          SizedBox(
+            height: 40, // Fixed height for the chip row
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppConstants.spaceMD,
+              ),
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children:
+                    widget.metrics.map((metric) {
+                      final isSelected =
+                          metric.type ==
+                          (selectedMetric ?? widget.metrics.first.type);
+                      return Padding(
+                        key: _chipKeys[metric.type],
+                        padding: const EdgeInsets.only(
+                          right: AppConstants.spaceSM,
+                        ),
+                        child: ChoiceChip(
+                          label: Text(metric.label),
+                          selected: isSelected,
+                          onSelected: (_) {
+                            ref.read(selectedMetricProvider.notifier).state =
+                                metric.type;
+                            // Scroll to the selected chip after a short delay to ensure the UI has updated
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _scrollToSelectedChip(metric.type);
+                            });
+                          },
+                        ),
+                      );
+                    }).toList(),
+              ),
             ),
           ),
           const SizedBox(height: AppConstants.spaceMD),
 
           // Metric Value and Change
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${selectedMetricData.value.toStringAsFixed(0)} ${selectedMetricData.unit}',
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: AppConstants.spaceMD,),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${selectedMetricData.value.toStringAsFixed(0)} ${selectedMetricData.unit}',
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    selectedMetricData.label,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    const SizedBox(height: 4),
+                    Text(
+                      selectedMetricData.label,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              _buildChangeIndicator(context, selectedMetricData),
-            ],
+                  ],
+                ),
+                _buildChangeIndicator(context, selectedMetricData),
+              ],
+            ),
           ),
           const SizedBox(height: AppConstants.spaceLG),
 
           // Chart
           Expanded(
-            child: CustomPaint(
-              size: Size.infinite,
-              painter: _ChartPainter(
-                data: selectedMetricData.chartData,
-                color: theme.colorScheme.primary,
-                textStyle: theme.textTheme.bodySmall!,
+            child: Padding(
+              padding: const EdgeInsets.only(left: AppConstants.spaceMD, right: AppConstants.spaceMD, top: AppConstants.spaceMD, bottom: 20),
+              // Add padding for date labels
+              child: CustomPaint(
+                size: Size.infinite,
+                painter: _ChartPainter(
+                  data: selectedMetricData.chartData,
+                  color: theme.colorScheme.primary,
+                  textStyle: theme.textTheme.bodySmall!,
+                ),
               ),
             ),
           ),
@@ -109,9 +188,10 @@ class DeveloperChart extends ConsumerWidget {
   Widget _buildChangeIndicator(BuildContext context, DeveloperMetric metric) {
     final theme = Theme.of(context);
     final change = metric.value - metric.previousValue;
-    final changePercent = metric.previousValue > 0
-        ? ((change / metric.previousValue) * 100)
-        : 0.0;
+    final changePercent =
+        metric.previousValue > 0
+            ? ((change / metric.previousValue) * 100)
+            : 0.0;
     final isPositive = change >= 0;
 
     return Container(
@@ -120,9 +200,10 @@ class DeveloperChart extends ConsumerWidget {
         vertical: 4,
       ),
       decoration: BoxDecoration(
-        color: isPositive
-            ? Colors.green.withOpacity(0.1)
-            : Colors.red.withOpacity(0.1),
+        color:
+            isPositive
+                ? Colors.green.withOpacity(0.1)
+                : Colors.red.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppConstants.radiusSM),
       ),
       child: Row(
@@ -162,19 +243,22 @@ class _ChartPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (data.isEmpty) return;
 
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 2.0
-      ..style = PaintingStyle.stroke;
+    final paint =
+        Paint()
+          ..color = color
+          ..strokeWidth = 2.0
+          ..style = PaintingStyle.stroke;
 
-    final fillPaint = Paint()
-      ..color = color.withOpacity(0.1)
-      ..style = PaintingStyle.fill;
+    final fillPaint =
+        Paint()
+          ..color = color.withOpacity(0.1)
+          ..style = PaintingStyle.fill;
 
-    final gridPaint = Paint()
-      ..color = color.withOpacity(0.2)
-      ..strokeWidth = 0.5
-      ..style = PaintingStyle.stroke;
+    final gridPaint =
+        Paint()
+          ..color = color.withOpacity(0.2)
+          ..strokeWidth = 0.5
+          ..style = PaintingStyle.stroke;
 
     // Calculate bounds
     final minValue = data.map((p) => p.value).reduce((a, b) => a < b ? a : b);
@@ -189,11 +273,7 @@ class _ChartPainter extends CustomPainter {
     const gridLines = 5;
     for (int i = 0; i <= gridLines; i++) {
       final y = size.height * (i / gridLines);
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        gridPaint,
-      );
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
     }
 
     // Create path for the line
@@ -226,9 +306,10 @@ class _ChartPainter extends CustomPainter {
     canvas.drawPath(path, paint);
 
     // Draw points
-    final pointPaint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
+    final pointPaint =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.fill;
 
     for (int i = 0; i < data.length; i++) {
       final x = (i / (data.length - 1)) * size.width;
@@ -240,21 +321,43 @@ class _ChartPainter extends CustomPainter {
 
     // Draw labels
     if (data.length >= 2) {
-      // Start date
-      _drawText(
+      // Calculate text sizes
+      final startDateText = _formatDate(data.first.date);
+      final endDateText = _formatDate(data.last.date);
+
+      final startTextPainter = TextPainter(
+        text: TextSpan(text: startDateText, style: textStyle),
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      final endTextPainter = TextPainter(
+        text: TextSpan(text: endDateText, style: textStyle),
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      // Start date - ensure it doesn't go beyond left edge
+      startTextPainter.paint(canvas, Offset(0, size.height + 5));
+
+      // End date - ensure it doesn't go beyond right edge
+      endTextPainter.paint(
         canvas,
-        _formatDate(data.first.date),
-        Offset(0, size.height + 20),
-        textStyle,
+        Offset(size.width - endTextPainter.width, size.height + 5),
       );
 
-      // End date
-      _drawText(
-        canvas,
-        _formatDate(data.last.date),
-        Offset(size.width - 40, size.height + 20),
-        textStyle,
-      );
+      // Optional: Add middle date if there are enough data points
+      if (data.length >= 5) {
+        final middleIndex = data.length ~/ 2;
+        final middleDateText = _formatDate(data[middleIndex].date);
+        final middleTextPainter = TextPainter(
+          text: TextSpan(text: middleDateText, style: textStyle),
+          textDirection: TextDirection.ltr,
+        )..layout();
+
+        middleTextPainter.paint(
+          canvas,
+          Offset((size.width - middleTextPainter.width) / 2, size.height + 5),
+        );
+      }
     }
   }
 

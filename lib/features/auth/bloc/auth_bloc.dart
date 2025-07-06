@@ -156,8 +156,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (user) => emit(AuthState.authenticated(user)),
     );
 
-    await Future.delayed(Duration(seconds: 10));
-
     emit(const AuthState.authenticated(User(id: "id", email: "email", name: "name")));
   }
 

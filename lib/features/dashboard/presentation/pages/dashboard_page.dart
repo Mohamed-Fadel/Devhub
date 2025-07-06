@@ -99,7 +99,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                       ),
                       const SizedBox(height: AppConstants.spaceMD),
                       SizedBox(
-                        height: 300,
+                        height: 320, // Increased from 300 to accommodate labels
                         child: DeveloperChart(metrics: stats.metrics),
                       ),
                     ],
@@ -136,7 +136,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
       crossAxisCount: 2,
       crossAxisSpacing: AppConstants.spaceMD,
       mainAxisSpacing: AppConstants.spaceMD,
-      childAspectRatio: 1.5,
+      childAspectRatio: 1.1,
       children: [
         StatsCard(
           title: 'Projects',
