@@ -1,12 +1,13 @@
+import 'package:devhub/core/network/api_client.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../constants/app_constants.dart';
-import '../error/exceptions.dart';
+import '../../core/constants/app_constants.dart';
+import '../../core/network/error/exceptions.dart';
 
 @singleton
-class DioClient {
+class DioClient implements HttpClient {
   final Dio _dio;
   final FlutterSecureStorage _secureStorage;
 
@@ -26,79 +27,99 @@ class DioClient {
       ]);
   }
 
-  // GET request
-  Future<Response> get(
+  @override
+  Future<ApiResponse> get(
     String path, {
     Map<String, dynamic>? queryParameters,
-    Options? options,
+    Map<String, String>? headers,
   }) async {
     try {
       final response = await _dio.get(
         path,
         queryParameters: queryParameters,
-        options: options,
+        options: Options(headers: headers),
       );
-      return response;
+      return DioApiResponse(response);
     } catch (e) {
       throw _handleError(e);
     }
   }
 
-  // POST request
-  Future<Response> post(
+  @override
+  Future<ApiResponse> post(
     String path, {
     dynamic data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
+    Map<String, String>? headers,
   }) async {
     try {
       final response = await _dio.post(
         path,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: Options(headers: headers),
       );
-      return response;
+      return DioApiResponse(response);
     } catch (e) {
       throw _handleError(e);
     }
   }
 
-  // PUT request
-  Future<Response> put(
+  @override
+  Future<ApiResponse> put(
     String path, {
     dynamic data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
+    Map<String, String>? headers,
   }) async {
     try {
       final response = await _dio.put(
         path,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: Options(headers: headers),
       );
-      return response;
+      return DioApiResponse(response);
     } catch (e) {
       throw _handleError(e);
     }
   }
 
-  // DELETE request
-  Future<Response> delete(
+  @override
+  Future<ApiResponse> patch(
     String path, {
     dynamic data,
     Map<String, dynamic>? queryParameters,
-    Options? options,
+    Map<String, String>? headers,
+  }) async {
+    try {
+      final response = await _dio.patch(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: Options(headers: headers),
+      );
+      return DioApiResponse(response);
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  @override
+  Future<ApiResponse> delete(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, String>? headers,
   }) async {
     try {
       final response = await _dio.delete(
         path,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: Options(headers: headers),
       );
-      return response;
+      return DioApiResponse(response);
     } catch (e) {
       throw _handleError(e);
     }
@@ -146,9 +167,9 @@ class _AuthInterceptor extends Interceptor {
 
   @override
   void onRequest(
-      RequestOptions options,
-      RequestInterceptorHandler handler,
-      ) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final token = await _secureStorage.read(key: AppConstants.accessTokenKey);
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
@@ -193,13 +214,32 @@ class _LoggingInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    print('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+    print(
+      'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
+    );
     handler.next(response);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    print('ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
+    print(
+      'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}',
+    );
     handler.next(err);
   }
+}
+
+class DioApiResponse implements ApiResponse {
+  final Response _response;
+
+  DioApiResponse(this._response);
+
+  @override
+  int? get statusCode => _response.statusCode;
+
+  @override
+  dynamic get data => _response.data;
+
+  @override
+  Map<String, dynamic>? get headers => _response.headers.map;
 }

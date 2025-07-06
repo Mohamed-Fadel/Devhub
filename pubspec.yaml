@@ -43,6 +43,7 @@ dependencies:
   dio: ^5.8.0+1                   # HTTP client
   freezed_annotation: ^3.0.0      # Immutable classes
   json_annotation: ^4.9.0         # JSON serialization
+  connectivity_plus: ^6.1.4       # Network connectivity status
 
   # Security & Storage
   flutter_secure_storage: ^9.2.4  # Secure key-value storage

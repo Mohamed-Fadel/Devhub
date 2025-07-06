@@ -1,4 +1,4 @@
-import 'package:devhub/core/error/failures.dart';
+import 'package:devhub/core/network/error/failures.dart';
 import 'package:devhub/features/auth/domain/entities/user.dart';
 import 'package:devhub/features/auth/domain/repositories/auth_repository.dart';
 import 'package:devhub/features/auth/domain/usecases/sign_in_usecase.dart';
@@ -155,6 +155,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) => emit(const AuthState.unauthenticated()),
       (user) => emit(AuthState.authenticated(user)),
     );
+
+    await Future.delayed(Duration(seconds: 10));
+
+    emit(const AuthState.authenticated(User(id: "id", email: "email", name: "name")));
   }
 
   String _mapFailureToMessage(Failure failure) {

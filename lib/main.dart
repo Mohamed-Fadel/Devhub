@@ -2,6 +2,7 @@ import 'package:devhub/core/constants/app_constants.dart';
 import 'package:devhub/core/dependency_injection.dart';
 import 'package:devhub/core/routing/app_router.dart';
 import 'package:devhub/core/theme/app_theme.dart';
+import 'package:devhub/features/dashboard/data/datasources/hive_adapters_registry.dart' as dashboard;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,7 @@ void main() async {
   // Initialize Hive with the directory
   Hive.init(directory.path);
 
+  registerHiveAdapters();
   // Setup dependency injection
   await configureDependencies();
 
@@ -29,6 +31,10 @@ void main() async {
   runApp(const ProviderScope(
     child: DevHubApp(),
   ),);
+}
+
+void registerHiveAdapters() {
+  dashboard.registerHiveAdapters();
 }
 
 class DevHubApp extends StatelessWidget {

@@ -1,3 +1,4 @@
+import 'package:devhub/core/routing/app_router.gr.dart';
 import 'package:devhub/core/routing/route_paths.dart';
 import 'package:devhub/features/auth/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
@@ -62,9 +63,7 @@ class _SignUpViewState extends State<SignUpView> {
           switch (state) {
             case Authenticated(:final user):
               // Navigate to dashboard or home page
-              context.router
-                ..replaceAll([])
-                ..replacePath(RoutePaths.dashboard);
+              context.router.replaceAll([const DashboardRoute()]);
             case Error(:final message):
               // Show error message
               ScaffoldMessenger.of(context).showSnackBar(

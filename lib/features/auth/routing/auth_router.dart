@@ -6,19 +6,16 @@ import 'package:devhub/core/routing/route_paths.dart';
 
 class AuthRouter implements BaseRouter {
   @override
-  String get baseRoute => RoutePaths.auth;
+  String get baseRoute => RoutePaths.app;
 
   @override
-  List<AutoRoute> get routes => [
-    AutoRoute(
-      page: SignInRoute.page,
-      path: RoutePaths.signIn
-    ),
-    AutoRoute(page: SignUpRoute.page, path: RoutePaths.signUp),
-    // AutoRoute(page: ForgotPasswordRoute.page, path: RoutePaths.forgotPassword),
-  ];
-}
-
-void main(){
-  final RoutePathe page = "sdsd";
+  List<AutoRoute> get routes =>
+      [
+        AutoRoute(
+            page: SignInRoute.page,
+            path: RoutePaths.signIn.lastSegment
+        ),
+        AutoRoute(page: SignUpRoute.page, path: RoutePaths.signUp.lastSegment),
+        // AutoRoute(page: ForgotPasswordRoute.page, path: RoutePaths.forgotPassword),
+      ];
 }

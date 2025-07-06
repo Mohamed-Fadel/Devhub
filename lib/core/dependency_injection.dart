@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
+import 'package:devhub/infrastructure/dependency_injection.dart' as infra;
 
 import 'dependency_injection.config.dart';
 
@@ -15,7 +15,6 @@ final getIt = GetIt.instance;
 )
 Future<void> configureDependencies() async {
   // Register external dependencies
-  getIt.registerLazySingleton<Dio>(() => Dio());
   getIt.registerLazySingleton<FlutterSecureStorage>(
     () => const FlutterSecureStorage(
       aOptions: AndroidOptions(encryptedSharedPreferences: true),
@@ -24,6 +23,8 @@ Future<void> configureDependencies() async {
       ),
     ),
   );
+
+  infra.configureDependencies();
 
   // Initialize Hive boxes
   await Hive.openBox('app_settings');

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:devhub/core/routing/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,7 +84,7 @@ class _OnboardingPageState extends State<OnboardingPage>
         listener: (context, state) {
           // Handle navigation
           if (state.shouldNavigateToAuth) {
-            context.router.replaceNamed(RoutePaths.signIn);
+            context.router.replaceAll([const SignInRoute()]);
           }
 
           // Handle page transitions from bloc

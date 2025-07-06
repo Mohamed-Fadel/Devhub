@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../core/error/failures.dart';
-import '../../../../core/error/exceptions.dart';
-import '../../domain/entities/user.dart';
-import '../../domain/repositories/auth_repository.dart';
+import 'package:devhub/core/network/error/failures.dart';
+import 'package:devhub/core/network/error/exceptions.dart';
+import 'package:devhub/features/auth/domain/entities/user.dart';
+import 'package:devhub/features/auth/domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
 import '../models/user_model.dart';
 

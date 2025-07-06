@@ -2,7 +2,7 @@ import 'package:devhub/features/onboarding/domain/entities/onboarding_page.dart'
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:devhub/core/usecases/usecase.dart';
+import 'package:devhub/core/domain/usecases/usecase.dart';
 import '../../domain/usecases/get_onboarding_pages_usecase.dart';
 import '../../domain/usecases/complete_onboarding_usecase.dart';
 

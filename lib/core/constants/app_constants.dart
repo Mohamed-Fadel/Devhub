@@ -3,7 +3,7 @@ class AppConstants {
   static const String appVersion = '1.0.0';
 
   // API Configuration
-  static const String baseUrl = 'https://api.devhub.com';
+  static const String baseUrl = 'https://vgoal.top/devhub/api/';
   static const String apiVersion = 'v1';
   static const String apiKey = 'your_api_key_here';
 

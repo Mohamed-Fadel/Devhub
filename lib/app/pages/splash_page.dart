@@ -1,5 +1,5 @@
 import 'package:devhub/core/constants/app_constants.dart';
-import 'package:devhub/core/routing/route_paths.dart';
+import 'package:devhub/core/routing/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 
@@ -11,8 +11,7 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage>
-    with TickerProviderStateMixin {
+class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late AnimationController _logoController;
   late AnimationController _fadeController;
   late Animation<double> _logoAnimation;
@@ -39,29 +38,17 @@ class _SplashPageState extends State<SplashPage>
       vsync: this,
     );
 
-    _logoAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _logoController,
-      curve: Curves.elasticOut,
-    ));
+    _logoAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _logoController, curve: Curves.elasticOut),
+    );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),
+    );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.5,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.elasticOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.elasticOut),
+    );
   }
 
   void _startAnimationSequence() async {
@@ -79,7 +66,7 @@ class _SplashPageState extends State<SplashPage>
 
   void _navigateToMainContainer() {
     if (mounted) {
-      context.router.replacePath(RoutePaths.app);
+      context.router.replace(const MainContainerRoute());
     }
   }
 
@@ -161,10 +148,12 @@ class _SplashPageState extends State<SplashPage>
                         position: Tween<Offset>(
                           begin: const Offset(0, 0.5),
                           end: Offset.zero,
-                        ).animate(CurvedAnimation(
-                          parent: _fadeController,
-                          curve: Curves.easeOutBack,
-                        )),
+                        ).animate(
+                          CurvedAnimation(
+                            parent: _fadeController,
+                            curve: Curves.easeOutBack,
+                          ),
+                        ),
                         child: Text(
                           AppConstants.appName,
                           style: theme.textTheme.headlineMedium?.copyWith(
@@ -184,10 +173,12 @@ class _SplashPageState extends State<SplashPage>
                         position: Tween<Offset>(
                           begin: const Offset(0, 0.8),
                           end: Offset.zero,
-                        ).animate(CurvedAnimation(
-                          parent: _fadeController,
-                          curve: Curves.easeOutBack,
-                        )),
+                        ).animate(
+                          CurvedAnimation(
+                            parent: _fadeController,
+                            curve: Curves.easeOutBack,
+                          ),
+                        ),
                         child: Text(
                           'Flutter Architecture Showcase',
                           style: theme.textTheme.bodyLarge?.copyWith(
@@ -207,10 +198,12 @@ class _SplashPageState extends State<SplashPage>
                         position: Tween<Offset>(
                           begin: const Offset(0, 1.0),
                           end: Offset.zero,
-                        ).animate(CurvedAnimation(
-                          parent: _fadeController,
-                          curve: Curves.easeOutBack,
-                        )),
+                        ).animate(
+                          CurvedAnimation(
+                            parent: _fadeController,
+                            curve: Curves.easeOutBack,
+                          ),
+                        ),
                         child: SizedBox(
                           width: 40,
                           height: 40,

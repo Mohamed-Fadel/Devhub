@@ -9,15 +9,15 @@ class RoutePaths {
   static const String app = '/app';
 
   // Onboarding paths
-  static const String onboarding = '/onboarding';
+  static const String onboarding = '/app/onboarding';
 
   // Auth paths
-  static const String signIn = '/sign-in';
-  static const String signUp = '/sign-up';
-  static const String forgotPassword = '/forgot-password';
+  static const String signIn = '/app/sign-in';
+  static const String signUp = '/app/sign-up';
+  static const String forgotPassword = '/app/forgot-password';
 
   // Dashboard paths
-  static const String dashboard = '/dashboard';
+  static const String dashboard = '/app/dashboard';
 
   // Profile paths
   static const String profile = '/profile';
@@ -36,4 +36,9 @@ class RoutePaths {
 
   // Settings paths
   static const String settings = '/settings';
+}
+
+extension RoutePathX on String {
+  /// Returns the last segment of the route path.
+  String get lastSegment => split('/').last;
 }

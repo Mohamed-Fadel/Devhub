@@ -1,7 +1,7 @@
+import 'package:devhub/core/network/api_client.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../core/network/dio_client.dart';
-import '../../../../core/error/exceptions.dart';
+import 'package:devhub/core/network/error/exceptions.dart';
 import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
@@ -35,9 +35,9 @@ abstract class AuthRemoteDataSource {
 
 @Injectable(as: AuthRemoteDataSource)
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  final DioClient dioClient;
+  final HttpClient apiClient;
 
-  AuthRemoteDataSourceImpl(this.dioClient);
+  AuthRemoteDataSourceImpl(this.apiClient);
 
   @override
   Future<UserModel> signIn({
@@ -45,7 +45,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String password,
   }) async {
     try {
-      final response = await dioClient.post(
+      final response = await apiClient.post(
         '/auth/signin',
         data: {
           'email': email,
@@ -66,7 +66,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String name,
   }) async {
     try {
-      final response = await dioClient.post(
+      final response = await apiClient.post(
         '/auth/signup',
         data: {
           'email': email,
@@ -84,7 +84,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserModel> signInWithGoogle() async {
     try {
-      final response = await dioClient.post('/auth/google');
+      final response = await apiClient.post('/auth/google');
       return UserModel.fromJson(response.data['user']);
     } catch (e) {
       throw ServerException(message: e.toString());
@@ -94,7 +94,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserModel> signInWithGitHub() async {
     try {
-      final response = await dioClient.post('/auth/github');
+      final response = await apiClient.post('/auth/github');
       return UserModel.fromJson(response.data['user']);
     } catch (e) {
       throw ServerException(message: e.toString());
@@ -104,7 +104,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> signOut() async {
     try {
-      await dioClient.post('/auth/signout');
+      await apiClient.post('/auth/signout');
     } catch (e) {
       throw ServerException(message: e.toString());
     }
@@ -113,7 +113,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserModel> getCurrentUser() async {
     try {
-      final response = await dioClient.get('/auth/me');
+      final response = await apiClient.get('/auth/me');
       return UserModel.fromJson(response.data['user']);
     } catch (e) {
       throw ServerException(message: e.toString());
@@ -123,7 +123,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> resetPassword({required String email}) async {
     try {
-      await dioClient.post(
+      await apiClient.post(
         '/auth/reset-password',
         data: {'email': email},
       );
@@ -135,7 +135,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<UserModel> updateProfile({required UserModel user}) async {
     try {
-      final response = await dioClient.put(
+      final response = await apiClient.put(
         '/auth/profile',
         data: user.toJson(),
       );

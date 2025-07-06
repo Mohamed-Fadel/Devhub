@@ -34,3 +34,8 @@ sealed class Failure with _$Failure {
     required String message,
   }) = UnknownFailure;
 }
+
+void main(){
+  final Failure error = Failure.server(message: "Server error", statusCode: 500);
+  error.message;
+}

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:devhub/core/routing/app_router.gr.dart';
 import 'package:devhub/core/routing/route_paths.dart';
 import 'package:devhub/features/auth/routing/auth_router.dart';
+import 'package:devhub/features/dashboard/presentation/routing/dashboard_router.dart';
 import 'package:injectable/injectable.dart';
 
 @AutoRouterConfig()
@@ -16,8 +17,11 @@ class AppRouter extends RootStackRouter {
     ),
     AutoRoute(
       page: MainContainerRoute.page,
-      path: RoutePaths.app
+      path: RoutePaths.app,
+      children: [
+        ...AuthRouter().routes,
+        ...DashboardRouter().routes
+      ]
     ),
-    ...AuthRouter().routes
   ];
 }

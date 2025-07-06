@@ -5,13 +5,13 @@ import 'package:devhub/core/routing/route_paths.dart';
 
 class OnboardingRouter implements BaseRouter {
   @override
-  String get baseRoute => RoutePaths.onboarding;
+  String get baseRoute => RoutePaths.app;
 
   @override
   List<AutoRoute> get routes => [
     AutoRoute(
       page: OnboardingRoute.page,
-      path: RoutePaths.onboarding,
+      path: RoutePaths.onboarding.lastSegment,
     ),
   ];
 }

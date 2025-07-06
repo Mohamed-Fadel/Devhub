@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:devhub/features/onboarding/domain/entities/onboarding_page.dart';
 import 'package:injectable/injectable.dart';
-import 'package:devhub/core/error/failures.dart';
-import 'package:devhub/core/error/exceptions.dart';
+import 'package:devhub/core/network/error/failures.dart';
+import 'package:devhub/core/network/error/exceptions.dart';
 import '../../domain/repositories/onboarding_repository.dart';
 import '../datasources/onboarding_local_datasource.dart';
 

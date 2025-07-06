@@ -1,4 +1,5 @@
 import 'package:devhub/core/constants/app_constants.dart';
+import 'package:devhub/core/routing/app_router.gr.dart';
 import 'package:devhub/core/services/storage_service.dart';
 import 'package:devhub/features/auth/bloc/auth_bloc.dart';
 import 'package:devhub/features/auth/presentation/pages/sign_in_page.dart';
@@ -17,10 +18,8 @@ class MainContainerPage extends StatefulWidget {
 }
 
 class _MainContainerPageState extends State<MainContainerPage> {
-  // Current screen state
-  Widget? _currentScreen;
-  bool _isInitializing = true;
   late PreferencesReaderService _preferencesReaderService;
+  bool _isInitializing = true;
 
   @override
   void initState() {
@@ -37,7 +36,7 @@ class _MainContainerPageState extends State<MainContainerPage> {
         child: Scaffold(
           body: Stack(
             children: [
-              // Main content area
+              // Main content area - AutoRouter handles nested navigation
               _buildMainContent(),
 
               // Global overlays (loading, dialogs, etc.)
@@ -54,11 +53,8 @@ class _MainContainerPageState extends State<MainContainerPage> {
       return _buildInitializingScreen();
     }
 
-    if (_currentScreen != null) {
-      return _currentScreen!;
-    }
-
-    return _buildInitializingScreen();
+    // AutoRouter outlet for nested pages
+    return const AutoRouter();
   }
 
   Widget _buildInitializingScreen() {
@@ -112,23 +108,32 @@ class _MainContainerPageState extends State<MainContainerPage> {
     BuildContext context,
     AuthState state,
   ) async {
+    final router = context.router;
+
     switch (state) {
       case Initial():
       case Loading():
         // Show loading state
         setState(() {
           _isInitializing = true;
-          _currentScreen = null; // Reset current screen
         });
         break;
       case Authenticated(:final user):
-        // User is authenticated - show dashboard
-        await _showDashboard();
+        // User is authenticated
+        setState(() {
+          _isInitializing = false;
+        });
+        await _navigateBasedOnAuthState(true);
         break;
+
       case Unauthenticated():
-        // User is not authenticated - show onboarding or sign in
-        await _handleUnauthenticatedUser();
+        // User is not authenticated
+        setState(() {
+          _isInitializing = false;
+        });
+        await _navigateBasedOnAuthState(false);
         break;
+
       case Error(:final message):
         // Show error dialog but still go to sign in
         await _handleAuthError(message);
@@ -136,94 +141,83 @@ class _MainContainerPageState extends State<MainContainerPage> {
     }
   }
 
-  Future<void> _showDashboard() async {
-    setState(() {
-      // _currentScreen = const DashboardPage();
-      _isInitializing = false;
-    });
-  }
 
-  Future<void> _handleUnauthenticatedUser() async {
-    if (await _preferencesReaderService.isFirstTime()) {
-      await _showOnboarding();
-    } else {
-      // Returning user - show sign in
-      await _showSignIn();
-    }
-  }
-
-  Future<void> _showOnboarding() async {
-    setState(() {
-      _currentScreen = OnboardingPage();
-      _isInitializing = false;
-    });
-  }
-
-  Future<void> _showSignIn() async {
-    setState(() {
-      _currentScreen = SignInPage();
-      // _currentScreen = SignInPage(
-      //   onSignInSuccess: () {
-      // When sign in is successful, auth bloc will emit authenticated state
-      // and _handleAuthStateChange will handle showing dashboard
-      // },
-      // );
-      _isInitializing = false;
-    });
-  }
+  // Future<void> _handleUnauthenticatedUser() async {
+  //   if (await _preferencesReaderService.isFirstTime()) {
+  //     await _showOnboarding();
+  //   } else {
+  //     Returning user - show sign in
+      // await _showSignIn();
+    // }
+  // }
 
   Future<void> _handleAuthError(String message) async {
     // Show error dialog but still go to sign in
     if (mounted) {
       _showErrorDialog(message);
     }
-    await _handleUnauthenticatedUser();
+    await _navigateBasedOnAuthState(false);
+  }
+
+  Future<void> _navigateBasedOnAuthState(bool isAuthenticated) async {
+    final router = context.router;
+    final isFirstTime = await _preferencesReaderService.isFirstTime();
+
+    if (isFirstTime) {
+      // First time user - show onboarding
+      router.replaceAll([const OnboardingRoute()]);
+    } else if (isAuthenticated) {
+      // Authenticated user - go to dashboard
+      router.replaceAll([const DashboardRoute()]);
+    } else {
+      // Not authenticated - go to sign in
+      router.replaceAll([const SignInRoute()]);
+    }
   }
 
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Row(
-              children: [
-                Icon(Icons.error_outline, color: Colors.red),
-                SizedBox(width: AppConstants.spaceSM),
-                Text('Authentication Error'),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('An error occurred during authentication:'),
-                const SizedBox(height: AppConstants.spaceSM),
-                Text(
-                  message,
-                  style: const TextStyle(
-                    fontStyle: FontStyle.italic,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  // Retry authentication
-                  context.read<AuthBloc>().add(
-                    const AuthEvent.getCurrentUser(),
-                  );
-                },
-                child: const Text('Retry'),
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.error_outline, color: Colors.red),
+            SizedBox(width: AppConstants.spaceSM),
+            Text('Authentication Error'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('An error occurred during authentication:'),
+            const SizedBox(height: AppConstants.spaceSM),
+            Text(
+              message,
+              style: const TextStyle(
+                fontStyle: FontStyle.italic,
+                color: Colors.grey,
               ),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Retry authentication
+              context.read<AuthBloc>().add(
+                const AuthEvent.getCurrentUser(),
+              );
+            },
+            child: const Text('Retry'),
           ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -235,32 +229,33 @@ class _MainContainerPageState extends State<MainContainerPage> {
   }) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(title),
-            content: Text(content),
-            actions:
-                actions ??
-                [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('OK'),
-                  ),
-                ],
-          ),
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: actions ??
+            [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+      ),
     );
   }
 
   void showGlobalSnackBar(String message, {Color? backgroundColor}) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: backgroundColor),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: backgroundColor,
+      ),
     );
   }
 
   // Handle auth state changes from anywhere in the app
   void handleGlobalSignOut() {
     context.read<AuthBloc>().add(const AuthEvent.signedOut());
-    // The BlocListener will automatically handle showing sign in screen
+    // The BlocListener will automatically handle navigation
   }
 
   // Optional: Network status banner
