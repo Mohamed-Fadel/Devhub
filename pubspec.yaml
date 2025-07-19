@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # State Management - Multiple Patterns
+  provider: ^6.1.5              # Provider for state management
   flutter_bloc: ^9.1.1            # BLoC pattern
   flutter_riverpod: ^2.6.1        # Riverpod for dashboard
 
@@ -49,6 +50,8 @@ dependencies:
   flutter_secure_storage: ^9.2.4  # Secure key-value storage
   hive: ^2.2.3                    # Secure NoSQL local database
   path_provider: ^2.1.5           # Platform-specific file paths
+  image_picker: ^1.1.2            # Image selection from gallery or camera
+
 
   # UI & Animations
   flutter_svg: ^2.1.0             # SVG support

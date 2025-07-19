@@ -1,31 +1,11 @@
 import 'package:devhub/core/network/api_client.dart';
+import 'package:devhub/core/network/error/exceptions.dart';
 import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../../core/constants/app_constants.dart';
-import '../../core/network/error/exceptions.dart';
-
-@singleton
 class DioClient implements HttpClient {
   final Dio _dio;
-  final FlutterSecureStorage _secureStorage;
 
-  DioClient(this._dio, this._secureStorage) {
-    _dio
-      ..options.baseUrl = '${AppConstants.baseUrl}/${AppConstants.apiVersion}'
-      ..options.connectTimeout = const Duration(seconds: 10)
-      ..options.receiveTimeout = const Duration(seconds: 10)
-      ..options.headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      }
-      ..interceptors.addAll([
-        _AuthInterceptor(_secureStorage),
-        _ErrorInterceptor(),
-        _LoggingInterceptor(),
-      ]);
-  }
+  DioClient(this._dio);
 
   @override
   Future<ApiResponse> get(
@@ -157,75 +137,6 @@ class DioClient implements HttpClient {
       ),
       _ => ServerException(message: message, statusCode: statusCode),
     };
-  }
-}
-
-class _AuthInterceptor extends Interceptor {
-  final FlutterSecureStorage _secureStorage;
-
-  _AuthInterceptor(this._secureStorage);
-
-  @override
-  void onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) async {
-    final token = await _secureStorage.read(key: AppConstants.accessTokenKey);
-    if (token != null) {
-      options.headers['Authorization'] = 'Bearer $token';
-    }
-    handler.next(options);
-  }
-
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
-      // Token expired, try to refresh
-      final refreshToken = await _secureStorage.read(
-        key: AppConstants.refreshTokenKey,
-      );
-
-      if (refreshToken != null) {
-        // Implement token refresh logic here
-        // For now, we'll just clear the tokens
-        await _secureStorage.delete(key: AppConstants.accessTokenKey);
-        await _secureStorage.delete(key: AppConstants.refreshTokenKey);
-      }
-    }
-    handler.next(err);
-  }
-}
-
-class _ErrorInterceptor extends Interceptor {
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    // Log error or send to crash reporting service
-    print('DioError: ${err.message}');
-    handler.next(err);
-  }
-}
-
-class _LoggingInterceptor extends Interceptor {
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    print('REQUEST[${options.method}] => PATH: ${options.path}');
-    handler.next(options);
-  }
-
-  @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
-    print(
-      'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
-    );
-    handler.next(response);
-  }
-
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    print(
-      'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}',
-    );
-    handler.next(err);
   }
 }
 

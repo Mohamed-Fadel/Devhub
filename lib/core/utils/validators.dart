@@ -3,6 +3,9 @@ class ValidationRules {
   // Technical implementations hidden as private members
   static final RegExp _emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
   static final RegExp _passwordRegex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)');
+  static final RegExp _nameRegex = RegExp(r"^[a-zA-Z\s\-']+$");
+  static final RegExp _phoneRegex = RegExp(r'^\+?[0-9\s\-()]+$');
+  static final RegExp _githubUsernameRegex = RegExp(r'^[a-zA-Z\d](?:[a-zA-Z\d]|-(?=[a-zA-Z\d])){0,38}$');
 
   /// Email Rules:
   /// - Must not be empty
@@ -33,6 +36,50 @@ class ValidationRules {
     }
     if (!_passwordRegex.hasMatch(value)) {
       return 'Password must contain uppercase, lowercase, and number';
+    }
+    return null;
+  }
+
+  /// Name validator
+  static String? name(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Name is required';
+    }
+
+    if (value.length < 2) {
+      return 'Name must be at least 2 characters';
+    }
+
+    // Allow letters, spaces, hyphens, and apostrophes
+    if (!_nameRegex.hasMatch(value)) {
+      return 'Please enter a valid name';
+    }
+
+    return null;
+  }
+
+  static String? phoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Phone number is required';
+    }
+    // Simple regex for phone numbers (can be adjusted for specific formats)
+    if (!_phoneRegex.hasMatch(value)) {
+      return 'Please enter a valid phone number';
+    }
+    return null;
+  }
+
+  static String? githubUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'GitHub username is required';
+    }
+    // GitHub username rules:
+    // - May only contain alphanumeric characters or hyphens
+    // - Cannot have multiple consecutive hyphens
+    // - Cannot begin or end with a hyphen
+    // - Maximum 39 characters
+    if (!_githubUsernameRegex.hasMatch(value)) {
+      return 'Please enter a valid GitHub username';
     }
     return null;
   }

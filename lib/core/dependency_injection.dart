@@ -2,7 +2,6 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
-import 'package:devhub/infrastructure/dependency_injection.dart' as infra;
 
 import 'dependency_injection.config.dart';
 
@@ -23,8 +22,6 @@ Future<void> configureDependencies() async {
       ),
     ),
   );
-
-  infra.configureDependencies();
 
   // Initialize Hive boxes
   await Hive.openBox('app_settings');

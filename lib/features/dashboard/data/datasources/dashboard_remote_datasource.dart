@@ -18,7 +18,7 @@ abstract class DashboardRemoteDataSource {
 class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
   final HttpClient _apiClient;
 
-  DashboardRemoteDataSourceImpl(this._apiClient);
+  DashboardRemoteDataSourceImpl(@Named('hostHttpClient') this._apiClient);
 
   @override
   Future<DashboardStatsModel> getDashboardStats() async {

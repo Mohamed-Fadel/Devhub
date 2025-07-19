@@ -14,6 +14,7 @@ class CustomTextField extends StatelessWidget {
   final void Function(String)? onChanged;
   final void Function()? onTap;
   final bool readOnly;
+  final TextInputAction? textInputAction;
 
   const CustomTextField({
     super.key,
@@ -30,6 +31,7 @@ class CustomTextField extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.readOnly = false,
+    this.textInputAction,
   });
 
   @override
@@ -44,6 +46,7 @@ class CustomTextField extends StatelessWidget {
       onChanged: onChanged,
       onTap: onTap,
       readOnly: readOnly,
+      textInputAction: textInputAction,
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,

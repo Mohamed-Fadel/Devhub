@@ -37,7 +37,7 @@ abstract class AuthRemoteDataSource {
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final HttpClient apiClient;
 
-  AuthRemoteDataSourceImpl(this.apiClient);
+  AuthRemoteDataSourceImpl(@Named('hostHttpClient') this.apiClient);
 
   @override
   Future<UserModel> signIn({

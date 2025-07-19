@@ -13,6 +13,9 @@ class AppConstants {
   static const String userDataKey = 'user_data';
   static const String themeKey = 'theme_preference';
 
+  // GitHub API Configuration
+  static const String githubBaseUrl = 'https://api.github.com';
+
   // Animation Durations
   static const Duration shortAnimation = Duration(milliseconds: 200);
   static const Duration mediumAnimation = Duration(milliseconds: 300);

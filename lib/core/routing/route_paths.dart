@@ -20,8 +20,8 @@ class RoutePaths {
   static const String dashboard = '/app/dashboard';
 
   // Profile paths
-  static const String profile = '/profile';
-  static const String editProfile = '/edit';
+  static const String profile = '/app/profile';
+  static const String editProfile = '/app/profile/edit';
 
   // Projects paths
   static const String projects = '/projects';
