@@ -1,5 +1,5 @@
 import 'package:devhub/core/network/api_client.dart';
-import 'package:devhub/core/network/error/exceptions.dart';
+import 'package:devhub/core/network/exceptions.dart';
 import 'package:devhub/features/profile/data/api/profile_endpoints.dart';
 import 'package:devhub/features/profile/data/models/profile_model.dart';
 import 'package:devhub/features/profile/data/models/skill_model.dart';

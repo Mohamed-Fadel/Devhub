@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:devhub/core/domain/usecases/usecase.dart';
-import 'package:devhub/core/network/error/failures.dart';
+import 'package:devhub/shared/domain/usecases/usecase.dart';
+import 'package:devhub/core/domain/vo/failures.dart';
 import 'package:devhub/features/dashboard/domain/entities/activity_item.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';

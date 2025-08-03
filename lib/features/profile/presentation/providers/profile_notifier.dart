@@ -1,5 +1,5 @@
 import 'package:devhub/core/domain/vo/result.dart';
-import 'package:devhub/core/network/error/exceptions.dart';
+import 'package:devhub/core/network/exceptions.dart';
 import 'package:devhub/core/services/time_provider.dart';
 import 'package:devhub/features/profile/domain/entities/achievement.dart';
 import 'package:devhub/features/profile/domain/entities/github_stats.dart';

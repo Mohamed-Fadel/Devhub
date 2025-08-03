@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:devhub/core/constants/app_constants.dart';
-import 'package:devhub/core/routing/route_paths.dart';
 import 'package:devhub/core/dependency_injection.dart';
-import 'package:devhub/shared/widgets/loading_overlay.dart';
-import '../bloc/onboarding_bloc.dart';
-import '../widgets/onboarding_content.dart';
-import '../widgets/page_indicator.dart';
-import '../widgets/animated_background.dart';
-import '../widgets/skip_button.dart';
+import 'package:devhub/shared/presentation/widgets/loading_overlay.dart';
+import 'package:devhub/features/onboarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:devhub/features/onboarding/presentation/widgets/onboarding_content.dart';
+import 'package:devhub/features/onboarding/presentation/widgets/page_indicator.dart';
+import 'package:devhub/features/onboarding/presentation/widgets/animated_background.dart';
+import 'package:devhub/features/onboarding/presentation/widgets/skip_button.dart';
 
 @RoutePage()
 class OnboardingPage extends StatefulWidget {

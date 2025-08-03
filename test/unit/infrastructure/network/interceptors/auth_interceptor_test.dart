@@ -1,5 +1,5 @@
 import 'package:devhub/core/constants/app_constants.dart';
-import 'package:devhub/core/data/key_value_store/key_value_storage.dart';
+import 'package:devhub/core/services/key_value_storage.dart';
 import 'package:devhub/infrastructure/network/interceptors/auth_interceptor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

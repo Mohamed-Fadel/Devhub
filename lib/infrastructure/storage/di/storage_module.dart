@@ -1,4 +1,4 @@
-import 'package:devhub/core/data/key_value_store/key_value_storage.dart';
+import 'package:devhub/core/services/key_value_storage.dart';
 import 'package:devhub/infrastructure/storage/flutter_secure_key_value_storage_impl.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';

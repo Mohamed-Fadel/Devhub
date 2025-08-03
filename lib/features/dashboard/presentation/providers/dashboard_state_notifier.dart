@@ -2,7 +2,7 @@ import 'package:devhub/features/dashboard/domain/entities/dashboard_stats.dart';
 import 'package:devhub/features/dashboard/domain/usecases/get_dashboard_stats.dart';
 import 'package:devhub/features/dashboard/domain/usecases/refresh_dashboard.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:devhub/core/domain/usecases/usecase.dart';
+import 'package:devhub/shared/domain/usecases/usecase.dart';
 
 class DashboardStateNotifier extends StateNotifier<AsyncValue<DashboardStats>> {
   final GetDashboardStats _getDashboardStats;

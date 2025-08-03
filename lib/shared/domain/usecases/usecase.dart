@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:devhub/core/domain/vo/result.dart';
-import 'package:devhub/core/network/error/failures.dart';
+import 'package:devhub/core/domain/vo/failures.dart';
 
 @Deprecated('Use ResultUseCase instead')
 abstract class UseCase<Type, Params> {

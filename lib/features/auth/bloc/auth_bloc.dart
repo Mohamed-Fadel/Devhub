@@ -1,4 +1,4 @@
-import 'package:devhub/core/network/error/failures.dart';
+import 'package:devhub/core/domain/vo/failures.dart';
 import 'package:devhub/features/auth/domain/entities/user.dart';
 import 'package:devhub/features/auth/domain/repositories/auth_repository.dart';
 import 'package:devhub/features/auth/domain/usecases/sign_in_usecase.dart';

@@ -2,8 +2,8 @@ import 'package:devhub/core/constants/app_constants.dart';
 import 'package:devhub/core/utils/validators.dart';
 import 'package:devhub/features/profile/domain/entities/profile.dart';
 import 'package:devhub/features/profile/presentation/providers/profile_notifier.dart';
-import 'package:devhub/shared/widgets/custom_button.dart';
-import 'package:devhub/shared/widgets/custom_text_field.dart';
+import 'package:devhub/shared/presentation/widgets/custom_button.dart';
+import 'package:devhub/shared/presentation/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

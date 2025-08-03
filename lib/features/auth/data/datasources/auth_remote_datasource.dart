@@ -1,7 +1,7 @@
 import 'package:devhub/core/network/api_client.dart';
 import 'package:injectable/injectable.dart';
 
-import 'package:devhub/core/network/error/exceptions.dart';
+import 'package:devhub/core/network/exceptions.dart';
 import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {

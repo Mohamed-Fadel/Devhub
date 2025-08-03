@@ -5,7 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i7;
 
-import 'package:devhub/core/data/key_value_store/key_value_storage.dart' as _i6;
+import 'package:devhub/core/services/key_value_storage.dart' as _i6;
 import 'package:dio/src/dio_exception.dart' as _i4;
 import 'package:dio/src/dio_mixin.dart' as _i2;
 import 'package:dio/src/headers.dart' as _i5;

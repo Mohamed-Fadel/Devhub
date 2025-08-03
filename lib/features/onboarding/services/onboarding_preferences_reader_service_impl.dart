@@ -1,4 +1,4 @@
-import 'package:devhub/core/data/key_value_store/key_value_storage.dart';
+import 'package:devhub/core/services/key_value_storage.dart';
 import 'package:devhub/core/services/storage_service.dart';
 import 'package:injectable/injectable.dart';
 

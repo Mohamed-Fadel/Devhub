@@ -1,4 +1,4 @@
-import 'package:devhub/core/domain/usecases/usecase.dart';
+import 'package:devhub/shared/domain/usecases/usecase.dart';
 import 'package:devhub/core/domain/vo/result.dart';
 import 'package:injectable/injectable.dart';
 import '../entities/github_stats.dart';

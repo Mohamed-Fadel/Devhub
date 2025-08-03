@@ -1,5 +1,5 @@
 import 'package:devhub/core/constants/app_constants.dart';
-import 'package:devhub/core/data/key_value_store/key_value_storage.dart';
+import 'package:devhub/core/services/key_value_storage.dart';
 import 'package:dio/dio.dart';
 
 class AuthInterceptor extends Interceptor {

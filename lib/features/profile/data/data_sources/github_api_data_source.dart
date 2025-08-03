@@ -1,5 +1,5 @@
 import 'package:devhub/core/network/api_client.dart';
-import 'package:devhub/core/network/error/exceptions.dart';
+import 'package:devhub/core/network/exceptions.dart';
 import 'package:devhub/core/services/time_provider.dart';
 import 'package:devhub/features/profile/data/api/github_endpoints.dart';
 import 'package:devhub/features/profile/data/models/github_stats_model.dart';

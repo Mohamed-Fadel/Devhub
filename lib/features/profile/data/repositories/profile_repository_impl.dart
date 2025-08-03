@@ -1,5 +1,5 @@
 import 'package:devhub/core/domain/vo/result.dart';
-import 'package:devhub/core/network/error/exceptions.dart';
+import 'package:devhub/core/network/exceptions.dart';
 import 'package:devhub/core/network/network_info.dart';
 import 'package:devhub/features/profile/data/data_sources/github_api_data_source.dart';
 import 'package:devhub/features/profile/data/data_sources/profile_local_data_source.dart';

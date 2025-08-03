@@ -1,4 +1,4 @@
-import 'package:devhub/core/data/key_value_store/key_value_storage.dart';
+import 'package:devhub/core/services/key_value_storage.dart';
 import 'package:injectable/injectable.dart';
 import '../models/onboarding_page_model.dart';
 

@@ -8,8 +8,8 @@ import 'package:devhub/features/profile/presentation/widgets/achievements_sectio
 import 'package:devhub/features/profile/presentation/widgets/github_stats_section.dart';
 import 'package:devhub/features/profile/presentation/widgets/profile_header.dart';
 import 'package:devhub/features/profile/presentation/widgets/skills_section.dart';
-import 'package:devhub/shared/widgets/error_view.dart';
-import 'package:devhub/shared/widgets/loading_view.dart';
+import 'package:devhub/shared/presentation/widgets/error_view.dart';
+import 'package:devhub/shared/presentation/widgets/loading_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

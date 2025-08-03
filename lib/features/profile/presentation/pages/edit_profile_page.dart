@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:devhub/core/dependency_injection.dart';
 import 'package:devhub/features/profile/presentation/providers/profile_notifier.dart';
-import 'package:devhub/shared/widgets/custom_text_field.dart';
+import 'package:devhub/shared/presentation/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 @RoutePage()
 class EditProfilePage extends StatefulWidget {

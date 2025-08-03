@@ -1,4 +1,4 @@
-import 'package:devhub/core/data/database/hive/hive_config.dart';
+import 'package:devhub/core/data/database/hive_config.dart';
 import 'package:devhub/features/profile/domain/entities/github_stats.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:devhub/core/network/error/exceptions.dart';
+import 'package:devhub/core/network/exceptions.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import '../models/profile_model.dart';

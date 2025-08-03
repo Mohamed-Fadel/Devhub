@@ -1,17 +1,16 @@
+import 'package:devhub/core/constants/app_constants.dart';
+import 'package:devhub/core/dependency_injection.dart';
 import 'package:devhub/core/routing/app_router.gr.dart';
 import 'package:devhub/core/routing/route_paths.dart';
+import 'package:devhub/core/utils/validators.dart';
 import 'package:devhub/features/auth/bloc/auth_bloc.dart';
+import 'package:devhub/shared/presentation/widgets/custom_button.dart';
+import 'package:devhub/shared/presentation/widgets/custom_text_field.dart';
+import 'package:devhub/shared/presentation/widgets/loading_overlay.dart';
+import 'package:devhub/shared/presentation/widgets/social_sign_in_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
-
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/utils/validators.dart';
-import '../../../../core/dependency_injection.dart';
-import '../../../../shared/widgets/loading_overlay.dart';
-import '../../../../shared/widgets/custom_text_field.dart';
-import '../../../../shared/widgets/custom_button.dart';
-import '../../../../shared/widgets/social_sign_in_button.dart';
 
 @RoutePage()
 class SignInPage extends StatelessWidget {

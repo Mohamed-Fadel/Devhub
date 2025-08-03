@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:devhub/core/network/error/failures.dart';
+import 'package:devhub/core/domain/vo/failures.dart';
 import 'package:devhub/features/dashboard/domain/entities/activity_item.dart';
 import 'package:devhub/features/dashboard/domain/entities/dashboard_stats.dart';
 
