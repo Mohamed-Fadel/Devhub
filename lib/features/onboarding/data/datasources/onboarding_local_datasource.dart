@@ -1,5 +1,5 @@
+import 'package:devhub/core/data/key_value_store/key_value_storage.dart';
 import 'package:injectable/injectable.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/onboarding_page_model.dart';
 
 abstract class OnboardingLocalDataSource {
@@ -10,11 +10,11 @@ abstract class OnboardingLocalDataSource {
 
 @LazySingleton(as: OnboardingLocalDataSource)
 class OnboardingLocalDataSourceImpl implements OnboardingLocalDataSource {
-  final FlutterSecureStorage _secureStorage;
+  final KeyValueStorage _keyValueStorage;
   static const String _onboardingCompletedKey = 'onboarding_completed';
   static const String _firstTimeKey = 'first_time_user';
 
-  OnboardingLocalDataSourceImpl(this._secureStorage);
+  OnboardingLocalDataSourceImpl(this._keyValueStorage);
 
   @override
   Future<List<OnboardingPageModel>> getOnboardingPages() async {
@@ -72,11 +72,11 @@ class OnboardingLocalDataSourceImpl implements OnboardingLocalDataSource {
 
   @override
   Future<void> setOnboardingCompleted() async {
-    await _secureStorage.write(
+    await _keyValueStorage.put(
       key: _onboardingCompletedKey,
       value: 'true',
     );
-    await _secureStorage.write(
+    await _keyValueStorage.put(
       key: _firstTimeKey,
       value: 'false',
     );
@@ -84,7 +84,7 @@ class OnboardingLocalDataSourceImpl implements OnboardingLocalDataSource {
 
   @override
   Future<bool> isOnboardingCompleted() async {
-    final completed = await _secureStorage.read(key: _onboardingCompletedKey);
+    final completed = await _keyValueStorage.get(key: _onboardingCompletedKey);
     return completed == 'true';
   }
 }

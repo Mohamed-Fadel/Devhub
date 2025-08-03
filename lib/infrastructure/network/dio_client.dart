@@ -1,6 +1,7 @@
 import 'package:devhub/core/network/api_client.dart';
-import 'package:devhub/core/network/error/exceptions.dart';
 import 'package:dio/dio.dart';
+
+import 'network_exception.dart';
 
 class DioClient implements HttpClient {
   final Dio _dio;
@@ -20,8 +21,8 @@ class DioClient implements HttpClient {
         options: Options(headers: headers),
       );
       return DioApiResponse(response);
-    } catch (e) {
-      throw _handleError(e);
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
     }
   }
 
@@ -40,8 +41,8 @@ class DioClient implements HttpClient {
         options: Options(headers: headers),
       );
       return DioApiResponse(response);
-    } catch (e) {
-      throw _handleError(e);
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
     }
   }
 
@@ -60,8 +61,8 @@ class DioClient implements HttpClient {
         options: Options(headers: headers),
       );
       return DioApiResponse(response);
-    } catch (e) {
-      throw _handleError(e);
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
     }
   }
 
@@ -80,8 +81,8 @@ class DioClient implements HttpClient {
         options: Options(headers: headers),
       );
       return DioApiResponse(response);
-    } catch (e) {
-      throw _handleError(e);
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
     }
   }
 
@@ -100,43 +101,9 @@ class DioClient implements HttpClient {
         options: Options(headers: headers),
       );
       return DioApiResponse(response);
-    } catch (e) {
-      throw _handleError(e);
+    } on DioException catch (e) {
+      throw NetworkException.fromDioException(e);
     }
-  }
-
-  Exception _handleError(dynamic error) {
-    if (error is DioException) {
-      switch (error.type) {
-        case DioExceptionType.connectionTimeout:
-        case DioExceptionType.sendTimeout:
-        case DioExceptionType.receiveTimeout:
-          return const NetworkException(message: 'Connection timeout');
-        case DioExceptionType.connectionError:
-          return const NetworkException(message: 'No internet connection');
-        case DioExceptionType.badResponse:
-          return _handleResponseError(error);
-        case DioExceptionType.cancel:
-          return const NetworkException(message: 'Request cancelled');
-        default:
-          return NetworkException(message: error.message ?? 'Unknown error');
-      }
-    }
-    return NetworkException(message: error.toString());
-  }
-
-  Exception _handleResponseError(DioException error) {
-    final statusCode = error.response?.statusCode;
-    final message = error.response?.data['message'] ?? 'Server error';
-
-    return switch (statusCode) {
-      401 => AuthenticationException(message: message),
-      403 => AuthorizationException(message: message),
-      int code when code >= 400 && code < 500 => ValidationException(
-        message: message,
-      ),
-      _ => ServerException(message: message, statusCode: statusCode),
-    };
   }
 }
 

@@ -20,7 +20,7 @@ class ImagePickerServiceImpl implements ImagePickerService {
         return null; // User cancelled the picker
       }
       return pickedFile.path;
-    } on Exception catch (_, e) {
+    } on Exception catch (e) {
       // Handle any errors that might occur during image picking
       print('Error picking image: $e');
       return null; // Return null if an error occurs

@@ -1,5 +1,6 @@
 import 'package:devhub/core/network/api_client.dart';
 import 'package:devhub/core/network/error/exceptions.dart';
+import 'package:devhub/core/services/time_provider.dart';
 import 'package:devhub/features/profile/data/api/github_endpoints.dart';
 import 'package:devhub/features/profile/data/models/github_stats_model.dart';
 import 'package:dio/dio.dart';
@@ -16,8 +17,12 @@ abstract class GithubApiDataSource {
 @Injectable(as: GithubApiDataSource)
 class GithubApiDataSourceImpl implements GithubApiDataSource {
   final HttpClient _apiClient;
+  final TimeProvider _timeProvider;
 
-  GithubApiDataSourceImpl(@Named('githubHttpClient') this._apiClient);
+  GithubApiDataSourceImpl(
+    @Named('githubHttpClient') this._apiClient,
+    this._timeProvider,
+  );
 
   @override
   Future<GithubStatsModel> fetchGithubStats(String username) async {
@@ -52,8 +57,10 @@ class GithubApiDataSourceImpl implements GithubApiDataSource {
         avatarUrl: userData['avatar_url'],
         profileUrl: userData['html_url'],
         languageStats: languageStats,
-        lastFetched: DateTime.now(),
+        lastFetched: _timeProvider.now(),
       );
+    } on ServerException {
+      rethrow;
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
         throw ServerException(message: 'GitHub user not found');
@@ -82,9 +89,8 @@ class GithubApiDataSourceImpl implements GithubApiDataSource {
       } else {
         throw ServerException(message: 'Failed to fetch user data');
       }
-    } on DioException catch (e) {
-      _handleDioError(e);
-      rethrow;
+    } on Exception catch (e) {
+      throw _handleError(e);
     }
   }
 
@@ -115,9 +121,8 @@ class GithubApiDataSourceImpl implements GithubApiDataSource {
       }
 
       return allRepos;
-    } on DioException catch (e) {
-      _handleDioError(e);
-      rethrow;
+    } on Exception catch (e) {
+      throw _handleError(e);
     }
   }
 
@@ -141,27 +146,17 @@ class GithubApiDataSourceImpl implements GithubApiDataSource {
     return 0;
   }
 
-  void _handleDioError(DioException e) {
-    if (e.response?.statusCode == 404) {
-      throw ServerException(message: 'GitHub resource not found');
-    } else if (e.response?.statusCode == 403) {
-      final rateLimitRemaining =
-          e.response?.headers['x-ratelimit-remaining']?.first;
-      if (rateLimitRemaining == '0') {
-        throw ServerException(
-          message: 'GitHub API rate limit exceeded. Please try again later.',
-        );
-      } else {
-        throw ServerException(message: 'GitHub API access forbidden');
+  Exception _handleError(Exception e) {
+    if (e is ServerException) {
+      if (e.statusCode == 404) {
+        return ServerException(message: 'GitHub resource not found');
+      } else if (e.statusCode == 403) {
+        return ServerException(message: 'GitHub API access forbidden');
+      } else if (e.statusCode == 401) {
+        return ServerException(message: 'GitHub API authentication failed');
       }
-    } else if (e.response?.statusCode == 401) {
-      throw ServerException(message: 'GitHub API authentication failed');
-    } else {
-      throw ServerException(
-        message:
-            e.response?.data?['message'] ??
-            'Failed to communicate with GitHub API',
-      );
+      return e;
     }
+    return NetworkException(message: 'Failed to communicate with GitHub API');
   }
 }

@@ -11,12 +11,12 @@ class NetworkInfoImpl implements NetworkInfo {
   @override
   Future<bool> get isConnected async {
     final result = await _connectivity.checkConnectivity();
-    return result != [ConnectivityResult.none];
+    return !result.contains(ConnectivityResult.none);
   }
 
   @override
   Stream<bool> get onConnectivityChanged =>
       _connectivity.onConnectivityChanged.map(
-            (result) => result != [ConnectivityResult.none],
+            (result) => !result.contains(ConnectivityResult.none),
       );
 }

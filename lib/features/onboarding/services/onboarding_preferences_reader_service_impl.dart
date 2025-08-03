@@ -1,23 +1,23 @@
+import 'package:devhub/core/data/key_value_store/key_value_storage.dart';
 import 'package:devhub/core/services/storage_service.dart';
 import 'package:injectable/injectable.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 @Injectable(as: OnboardingPreferenceReader)
 class OnboardingPreferenceReaderImpl implements OnboardingPreferenceReader {
-  final FlutterSecureStorage _secureStorage;
+  final KeyValueStorage _keyValueStorage;
   static const String _firstTimeKey = 'first_time_user';
 
-  OnboardingPreferenceReaderImpl(this._secureStorage);
+  OnboardingPreferenceReaderImpl(this._keyValueStorage);
 
   @override
   Future<bool> isFirstTime() async {
-    final value = await _secureStorage.read(key: _firstTimeKey);
+    final value = await _keyValueStorage.get(key: _firstTimeKey);
     // If no value exists, it's the first time
     return value == null || value == 'true';
   }
 
   Future<void> setFirstTime(bool value) async {
-    await _secureStorage.write(
+    await _keyValueStorage.put(
       key: _firstTimeKey,
       value: value.toString(),
     );
