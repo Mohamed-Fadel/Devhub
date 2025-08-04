@@ -34,6 +34,20 @@ This repository demonstrates:
 
 ---
 
+## 🎬 Video Demo
+
+<div align="center">
+  <a href="https://youtu.be/YOUR_VIDEO_ID">
+    <img src="https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg" alt="DevHub Flutter Architecture Showcase Video" width="80%">
+  </a>
+
+**[▶️ Watch Full Demo Video](https://youtu.be/YOUR_VIDEO_ID)** *(5 minutes)*
+
+See the app in action: Onboarding flow • Authentication flow • Dashboard features • Profile management • Real-time updates • Responsive design
+</div>
+
+---
+
 🎯 Project Overview
 
 **DevHub** is a developer portfolio and social platform built to demonstrate advanced Flutter architecture patterns and best practices. This project serves as a comprehensive showcase of modern Flutter development, featuring multiple state management solutions, clean architecture, and production-ready features.
