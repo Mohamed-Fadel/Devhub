@@ -2,6 +2,8 @@
 
 [![Flutter Version](https://img.shields.io/badge/Flutter-3.16+-blue.svg)](https://flutter.dev/)
 [![Dart Version](https://img.shields.io/badge/Dart-3.7+-blue.svg)](https://dart.dev/)
+![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-green.svg)
+![State Management](https://img.shields.io/badge/State%20Management-BLoC%20|%20Riverpod%20|%20Provider-orange.svg)
 
 > **A comprehensive Flutter architecture showcase demonstrating top development practices, multiple state management patterns, and production-ready features.**
 
@@ -14,7 +16,7 @@ This repository demonstrates:
 - Separation of concerns
 
 ### ✅ **State Management Mastery**
-- BLoC pattern for complex flows (Authentication)
+- BLoC pattern for complex flows (Authentication, Onboarding)
 - Riverpod for modern reactive programming (Dashboard)
 - Provider for traditional state management (Profile)
 
@@ -38,12 +40,23 @@ This repository demonstrates:
 
 ### 🏆 What Makes This Project Special
 
+- **Modular Feature-Based Structure** - Each feature is self-contained and independently maintainable
 - **Multiple Architecture Patterns** - Clean Architecture, MVVM, Repository Pattern
 - **Multiple State Management** - BLoC, Riverpod, Provider (comparative implementation)
+- **Dependency Injection** - Using GetIt and Injectable for proper dependency management
+- **Advanced Routing** - Modular routing system with AutoRoute
 - **Production-Ready Features** - Authentication, offline support, performance optimization
 - **Real-World Complexity** - Complex UI, data visualization, real-time features
 
 ## App Features
+
+### Onboarding Module (BLoC Pattern)
+- Interactive onboarding flow with animations
+- Page indicators and navigation controls
+- Skip functionality for returning users
+- Animated backgrounds and smooth transitions
+- Completion tracking with local storage
+- Seamless navigation to authentication
 
 ### Authentication Module (BLoC Pattern)
 - Email/Password authentication
@@ -69,9 +82,95 @@ This repository demonstrates:
 ### Clean Architecture Implementation
 
 ```
-├── 📁 presentation/     # UI Layer (Widgets, Pages, State Management)
-├── 📁 domain/          # Business Logic Layer (Entities, Use Cases, Repositories)
-└── 📁 data/            # Data Layer (Models, Data Sources, Repository Implementation)
+lib/
+├── app/                          # Application layer
+│   └── pages/                    # App-level pages
+│
+├── core/                         # Core functionality
+│   ├── constants/                # App constants
+│   ├── data/                     # Core data layer
+│   ├── domain/                   # Core domain layer
+│   ├── network/                  # Network configuration
+│   ├── routing/                  # Routing infrastructure
+│   ├── services/                 # Core services (interfaces)
+│   ├── theme/                    # App theming
+│   └── utils/                    # Utilities
+│
+├── features/                     # Feature modules
+│   ├── onboarding/               # Onboarding feature
+│   │   ├── domain/               # Business logic
+│   │   │   ├── entities/         # Business objects
+│   │   │   ├── repositories/     # Repository interfaces
+│   │   │   └── usecases/         # Business rules
+│   │   ├── data/                 # Data layer
+│   │   │   ├── datasources/      # Remote/Local sources
+│   │   │   ├── models/           # Data models
+│   │   │   └── repositories/     # Repository implementations
+│   │   ├── presentation/         # UI layer
+│   │   │   ├── bloc/             # State management
+│   │   │   ├── pages/            # Screen widgets
+│   │   │   ├── widgets/          # Reusable widgets
+│   │   │   └── routing/          # Feature routing
+│   │   ├── routing/              # routing configuration
+│   │   └── services/             # Feature-specific services implementations
+│   │
+│   ├── auth/                     # Auth feature (similar structure)
+│   ├── dashboard/                # Dashboard feature
+│   └── profile/                  # Profile feature
+│
+├── infrastructure/               # Infrastructure layer
+│   ├── network/                  # Network clients and interceptors
+│   └── services/                 # Third-party service implementations
+│
+└── shared/                       # Shared code between features
+    ├── domain/                   # Shared domain logic
+    └── presentation/             # Shared UI components
+```
+
+### 🔄 Data Flow Architecture
+
+```
+┌─────────────────┐
+│   Presentation  │ (UI + State Management)
+│  BLoC/Riverpod  │
+└────────┬────────┘
+         │ Stream/State
+┌────────▼────────┐
+│     Domain      │ (Use Cases + Entities)
+│  Business Logic │
+└────────┬────────┘
+         │ Repository Interface
+┌────────▼────────┐
+│      Data       │ (Repository Implementation)
+│  Local/Remote   │
+└─────────────────┘
+```
+
+### 🧩 Modular Routing System
+
+Each feature module manages its own routes:
+
+```dart
+// Feature-level router
+class OnboardingRouter implements BaseRouter {
+  @override
+  String get baseRoute => '/onboarding';
+  
+  @override
+  List<AutoRoute> get routes => [
+    AutoRoute(page: OnboardingRoute.page, path: baseRoute),
+  ];
+}
+
+// Centralized route registration
+class AppRouter extends $AppRouter {
+  @override
+  List<AutoRoute> routes => [
+    ...onboardingRouter.routes,
+    ...authRouter.routes,
+    ...dashboardRouter.routes,
+  ];
+}
 ```
 
 ### State Management Comparison
@@ -211,6 +310,8 @@ flutter test integration_test/
 
 - **Consistency** - Unified design language across all screens
 - **Accessibility** - WCAG 2.1 AA compliant
+- **Spacing System**: 8pt grid system
+- **Component Library**: Reusable UI components
 - **Responsiveness** - Adaptive design for all screen sizes
 - **Performance** - Optimized animations and interactions
 
