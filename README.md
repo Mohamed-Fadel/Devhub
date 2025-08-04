@@ -43,6 +43,8 @@ This repository demonstrates:
 
 **[▶️ Watch Full Demo Video](https://youtu.be/YOUR_VIDEO_ID)** *(5 minutes)*
 
+[![Watch the video](https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+
 See the app in action: Onboarding flow • Authentication flow • Dashboard features • Profile management • Real-time updates • Responsive design
 </div>
 
