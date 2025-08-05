@@ -1,5 +1,3 @@
-# DevHub - Flutter Architecture Showcase
-
 [![Flutter Version](https://img.shields.io/badge/Flutter-3.16+-blue.svg)](https://flutter.dev/)
 [![Dart Version](https://img.shields.io/badge/Dart-3.7+-blue.svg)](https://dart.dev/)
 ![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-green.svg)
@@ -36,12 +34,9 @@ This repository demonstrates:
 
 ## 🎬 Video Demo
 
-<div align="center">
-  <a href="https://youtu.be/YOUR_VIDEO_ID">
-    <img src="https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg" alt="DevHub Flutter Architecture Showcase Video" width="80%">
-  </a>
+[![Watch the video](https://github.com/user-attachments/assets/25504da3-55c6-4bf8-9d7f-8524317515c6)](https://youtu.be/txMrr1poP4o)
 
-**[▶️ Watch Full Demo Video](https://youtu.be/YOUR_VIDEO_ID)** *(5 minutes)*
+**[▶️ Watch Full Demo Video](https://youtu.be/txMrr1poP4o)** *(1 minute)*
 
 See the app in action: Onboarding flow • Authentication flow • Dashboard features • Profile management • Real-time updates • Responsive design
 </div>
