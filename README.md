@@ -184,11 +184,11 @@ class AppRouter extends $AppRouter {
 
 ### State Management Comparison
 
-| Feature | BLoC | Riverpod | Provider | Custom |
-|---------|------|----------|----------|--------|
-| **Authentication** | ✅ Primary | | | |
-| **Dashboard** | | ✅ Primary | | |
-| **Profile** | | | ✅ Primary | |
+| Feature | BLoC | Riverpod | Provider |
+|---------|------|----------|----------|
+| **Authentication** | ✅ Primary | | |
+| **Dashboard** | | ✅ Primary | |
+| **Profile** | | | ✅ Primary |
 
 ### Dependency Injection
 
