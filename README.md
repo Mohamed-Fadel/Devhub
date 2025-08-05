@@ -48,7 +48,7 @@ See the app in action: Onboarding flow • Authentication flow • Dashboard fea
 
 ---
 
-🎯 Project Overview
+## 🎯 Project Overview
 
 **DevHub** is a developer portfolio and social platform built to demonstrate advanced Flutter architecture patterns and best practices. This project serves as a comprehensive showcase of modern Flutter development, featuring multiple state management solutions, clean architecture, and production-ready features.
 
